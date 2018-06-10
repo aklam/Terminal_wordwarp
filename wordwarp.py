@@ -88,7 +88,12 @@ def global_game(dev=False):
 	while game_round(word_warp,round_duration,dev) > 0:
 		word_warp = game_startup(all_words, num_play_chars, min_num_words, dev)
 
-global_game(True) if len(sys.argv) > 1 and sys.argv[1] == "default" else global_game()
+if not os.path.isfile("words_filter.txt"):
+	all_names = process_names()
+	process_kilgarriff_words(all_names)
+	all_words = read_words_file("words_filter.txt")
+	find_6words(all_words)
 
+global_game(True) if len(sys.argv) > 1 and sys.argv[1] == "default" else global_game()
 
 
