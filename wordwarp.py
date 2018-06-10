@@ -13,16 +13,16 @@ from game_params import *
 # - clean up code
 # - 
 
-def game_startup(all_words, num_play_chars, min_num_words, rand=True, dev=False):
+def game_startup(all_words, num_play_chars, min_num_words, dev=False):
 	
-	rand_chars = gen_rand_chars(num_play_chars,rand)
+	rand_chars = gen_rand_chars(num_play_chars)
 	num_char_sets = 1
 	possible_words_from_chars = possible_words(all_words, rand_chars)
 
 	
 	while len(possible_words_from_chars) < min_num_words:
 		num_char_sets += 1
-		rand_chars = gen_rand_chars(num_play_chars,rand)
+		rand_chars = gen_rand_chars(num_play_chars)
 		possible_words_from_chars = possible_words(all_words, rand_chars)
 
 	valid_char_subsets = get_power_set(rand_chars,0)
@@ -86,9 +86,8 @@ def global_game(dev=False):
 	num_play_chars = 6 if dev else int(size_input)
 	min_num_words  = 10 if dev else int(num_words_input)
 	round_duration = 120 if dev else int(round_len_input)
-	rand = False
 	all_words = read_words_file("words_filter.txt")
-	word_warp = game_startup(all_words, num_play_chars, min_num_words, rand, dev)
+	word_warp = game_startup(all_words, num_play_chars, min_num_words, dev)
 	while game_round(word_warp,round_duration,dev) > 0:
 		word_warp = game_startup(all_words, num_play_chars, min_num_words, rand, dev)
 

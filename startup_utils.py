@@ -27,20 +27,10 @@ def get_power_set(gen_chars, min_len):
 	return char_permutations
 
 #generates the random characters to be used in the game
-def gen_rand_chars(num_chars,rand=True):
-	if rand:
-		vowel_counts = 0
-		while vowel_counts == 0:
-			rand_chars = []
-			for i in range(num_chars):
-				rand_chars.append(random.choice(string.ascii_lowercase))
-			rand_chars_str = ''.join(rand_chars)
-			vowel_counts = sum(list(map(rand_chars.count,"aeiou")))
-			return rand_chars
-	else:
-		words6_file = open("words6.txt","r")
-		list_6_words = words6_file.read().split("\n")
-		return list(random.choice(list_6_words))
+def gen_rand_chars(num_chars):
+	words6_file = open("words6.txt","r")
+	list_6_words = words6_file.read().split("\n")
+	return list(random.choice(list_6_words))
 	
 
 #read all of the words in the word file
