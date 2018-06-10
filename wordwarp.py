@@ -10,28 +10,24 @@ from startup_utils import *
 from process_word_files import *
 
 
-def game_startup(all_words, num_play_chars, min_num_words, dev=False):
+def game_startup(all_words, num_play_chars, min_num_words, is_classic, min_word_len, dev=False):
 	
 	rand_chars = gen_rand_chars(num_play_chars)
 	num_char_sets = 1
 	possible_words_from_chars = possible_words(all_words, rand_chars)
-
 	
 	while len(possible_words_from_chars) < min_num_words:
 		num_char_sets += 1
 		rand_chars = gen_rand_chars(num_play_chars)
 		possible_words_from_chars = possible_words(all_words, rand_chars)
 
-	valid_char_subsets = get_power_set(rand_chars,0)
-
-	print("Game Size: " + str(num_play_chars))
-	print("Number of Words: " +str(len(possible_words_from_chars)))
+	valid_char_subsets = get_power_set(rand_chars,min_word_len)
 	if dev:
 		print("Tried " + str(num_char_sets) + " character sets")
 		print(possible_words_from_chars)
 	return(Game_params(rand_chars, possible_words_from_chars,valid_char_subsets))
 
-def game_round(ww_game,round_duration,dev=False):
+def game_round(ww_game, round_duration, dev=False):
 	input("Press ENTER to continue")
 	start_time = time.time()
 	warning = ""
@@ -41,15 +37,17 @@ def game_round(ww_game,round_duration,dev=False):
 		print("Chararacter set: " + bcolors.BOLD + ww_game.char_set()+bcolors.ENDC)
 		print(warning,end='')
 		warning = ""
-		query = input("Guess: ")
+		query = input("Guess: " + bcolors.BOLD).lower()
 		if query == "":
 			warning = "Please enter a guess or a command. Type HELP for help\n"
-		elif query == "QUIT" or query == "Q":
+		elif query == "QUIT" or query == "q":
 			temp = os.system("clear")
 			ww_game.give_up()
 			print("Game Over")
 			return(-1)
-		elif query == "END ROUND":
+		elif query == "end round":
+			if ww_game.score == 0:
+				print("Game Over")
 			break
 		elif query == "SHUFFLE" or query == "1":
 			ww_game.shuffle_char_set()
@@ -60,15 +58,19 @@ def game_round(ww_game,round_duration,dev=False):
 		else:
 			ww_game.valid_guess(query)
 
-	print(time.time()-start_time)
 	return(ww_game.score)
 	
-def global_game(dev=False):
-	if not dev:
+def global_game(is_classic, dev=False):
+	if not is_classic:
 		size_input      = input("Game Size: ") 
 		while not size_input.isnumeric():
 			print("Please only input numbers as game size: ")
 			size_input = input("Game Size: ")
+
+		min_word_len_input = input("Minimum word length: ") 
+		while not size_input.isnumeric():
+			print("Please only input numbers as minimum word length: ")
+			min_word_len_input = input("Minimum word length: ")
 
 		num_words_input = input("Minimum number of words: ") 
 		while not num_words_input.isnumeric():
@@ -80,13 +82,24 @@ def global_game(dev=False):
 			print("Please only input numbers for round duration: ")
 			round_len_input = input("Round duration (sec): ")
 
-	num_play_chars = 6 if dev else int(size_input)
-	min_num_words  = 10 if dev else int(num_words_input)
-	round_duration = 120 if dev else int(round_len_input)
+	num_play_chars = 6   if is_classic else int(size_input)
+	min_word_len   = 3   if is_classic else int(min_word_len_input)
+	min_num_words  = 10  if is_classic else int(num_words_input)
+	round_duration = 120 if is_classic else int(round_len_input)
+
+
+	sys.stdout.write(bcolors.BOLD + "          Game Type: ")
+	if is_classic:
+		sys.stdout.write("Classic\n")
+	else:
+		sys.stdout.write("Custom\n")
+	print("          Game Size: " + str(num_play_chars))
+	print("Minimum Word Length: " + str(min_word_len) + bcolors.ENDC)
+
 	all_words = read_words_file("words_filter.txt")
-	word_warp = game_startup(all_words, num_play_chars, min_num_words, dev)
-	while game_round(word_warp,round_duration,dev) > 0:
-		word_warp = game_startup(all_words, num_play_chars, min_num_words, dev)
+	word_warp = game_startup(all_words, num_play_chars, min_num_words, is_classic, min_word_len)
+	while game_round(word_warp, round_duration, dev) > 0:
+		word_warp = game_startup(all_words, num_play_chars, min_num_words, is_classic, min_word_len)
 
 if not os.path.isfile("words_filter.txt"):
 	all_names = process_names()
@@ -94,6 +107,13 @@ if not os.path.isfile("words_filter.txt"):
 	all_words = read_words_file("words_filter.txt")
 	find_6words(all_words)
 
-global_game(True) if len(sys.argv) > 1 and sys.argv[1] == "default" else global_game()
+game_mode = input("Play classic? (y/n) ").lower()
+while game_mode != "y" and game_mode != "n":
+	game_mode = input("Play classic? (y/n) ")
 
+if game_mode == "y":
+	global_game(True)
+else:
+	global_game(False)
+sys.stdout.write(bcolors.ENDC)
 
