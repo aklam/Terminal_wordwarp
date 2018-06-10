@@ -1,11 +1,9 @@
 import os
 import re
 import sys
-import copy
+import csv
 import time
-import random
 import string
-import itertools
 from startup_utils import *
 
 
@@ -23,16 +21,25 @@ def find_6words(all_words, num_chars=6, min_words=12):
 				words6_file.write(word+"\n")
 
 
-all_words = read_words_file("words_filter.txt")
-find_6words(all_words)
-
 #http://www.kilgarriff.co.uk/bnc-readme.html#lemmatised
-def process_kilgarriff():
-	freq_file = open("all.num","r")
+def process_kilgarriff_words(names_dict):
+	freq_file  = open("all.num","r")
+
 	proc_words_file = open("words_filter.txt","w")
 	for line in freq_file:
 		word_att = line.split()
-		if word_att[1].isalpha() and word_att[1].islower() and int(word_att[0]) >= 50 and len(word_att[1]) >= 3:
+		if word_att[1].isalpha() and word_att[1].islower() and int(word_att[0]) >= 50 and word_att[1] not in names_dict:
 			proc_words_file.write(word_att[1] + "\n")
 
-#process_kilgarriff()
+def process_names():
+	all_names = {}
+	names_file = open("yob2017.txt","r")
+	names_csv  = csv.reader(names_file,delimiter=",")
+	for line in names_csv:
+		all_names[line[0].lower()] = 1
+	return all_names
+
+all_names = process_names()
+process_kilgarriff_words(all_names)
+all_words = read_words_file("words_filter.txt")
+find_6words(all_words)

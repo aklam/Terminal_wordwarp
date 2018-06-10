@@ -5,8 +5,9 @@ import time
 import random
 import string
 import itertools
-from startup_utils import *
 from game_params import *
+from startup_utils import *
+from process_word_files import *
 
 
 def game_startup(all_words, num_play_chars, min_num_words, dev=False):
@@ -85,7 +86,7 @@ def global_game(dev=False):
 	all_words = read_words_file("words_filter.txt")
 	word_warp = game_startup(all_words, num_play_chars, min_num_words, dev)
 	while game_round(word_warp,round_duration,dev) > 0:
-		word_warp = game_startup(all_words, num_play_chars, min_num_words, rand, dev)
+		word_warp = game_startup(all_words, num_play_chars, min_num_words, dev)
 
 global_game(True) if len(sys.argv) > 1 and sys.argv[1] == "default" else global_game()
 
