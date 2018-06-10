@@ -8,10 +8,6 @@ import itertools
 from startup_utils import *
 from game_params import *
 
-##TODO:
-# - use smaller word list
-# - clean up code
-# - 
 
 def game_startup(all_words, num_play_chars, min_num_words, dev=False):
 	
