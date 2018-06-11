@@ -68,8 +68,7 @@ class Game_params:
 
 	def draw_progress(self):
 		i = 0
-		print(bcolors.BOLD + "Words guessed: " + str(self.num_words_guessed)+"/"+str(self.total_num_words))
-		print("        Score: " + str(self.score)+"/"+str(self.max_score))
+		sys.stdout.write(bcolors.BOLD + "Words guessed: " + str(self.num_words_guessed)+"/"+str(self.total_num_words) + "\t       Score: " + str(self.score)+"/"+str(self.max_score) + "\n")
 		for word in self.sorted_len_words:
 			if i % 10 == 0 and i != 0:
 				print("\n")
@@ -82,6 +81,7 @@ class Game_params:
 
 	def give_up(self):
 		i = 0
+		sys.stdout.write(bcolors.BOLD + "Words guessed: " + str(self.num_words_guessed)+"/"+str(self.total_num_words) + "\t Final Score: " + str(self.score)+"/"+str(self.max_score) + "\n")
 		for word in self.sorted_len_words:
 			if i % 10 == 0 and i != 0:
 				print("\n")
@@ -91,4 +91,5 @@ class Game_params:
 				print(bcolors.OKGREEN + word + "\t" + bcolors.ENDC,end='')
 			i += 1
 		print("\n", end='')
+		
 

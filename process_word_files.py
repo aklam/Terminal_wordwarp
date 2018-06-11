@@ -34,17 +34,18 @@ def find_6words(all_words, num_chars=6, min_words=12):
 		if i > load_bar_unit and (i % 50 == 0 or i % load_bar_unit == 0):
 			sys.stdout.write("\b"*8 + bcolors.BOLD + "\t{0:.2f}%".format(100*i/num_words) + bcolors.ENDC)
 			sys.stdout.flush()
-	sys.stdout.flush("\n")
+	sys.stdout.write("\n")
+	sys.stdout.flush()
 
 
 #http://www.kilgarriff.co.uk/bnc-readme.html#lemmatised
-def process_kilgarriff_words(names_dict):
+def process_kilgarriff_words(names_dict,freq_filter):
 	freq_file  = open("all.num","r") 
 
 	proc_words_file = open("words_filter.txt","w")
 	for line in freq_file:
 		word_att = line.split()
-		if word_att[1].isalpha() and word_att[1].islower() and int(word_att[0]) >= 10 and word_att[1] not in names_dict:
+		if word_att[1].isalpha() and word_att[1].islower() and int(word_att[0]) >= freq_filter and word_att[1] not in names_dict:
 			proc_words_file.write(word_att[1] + "\n")
 
 def process_names():
