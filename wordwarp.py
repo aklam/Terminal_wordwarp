@@ -5,9 +5,10 @@ import time
 import random
 import string
 import itertools
+from word_defs import *
 from game_params import *
 from startup_utils import *
-from process_word_files import *
+from preprocess_vocab_6words import *
 
 
 def game_startup(all_words, num_play_chars, min_num_words, is_classic, min_word_len, dev=False):
@@ -30,18 +31,18 @@ def game_startup(all_words, num_play_chars, min_num_words, is_classic, min_word_
 def game_round(ww_game, round_duration, dev=False):
 	input("Press ENTER to continue")
 	start_time = time.time()
-	warning = ""
+	query_msg = ""
 	while time.time()-start_time < round_duration:
 		temp = os.system("clear")
 		ww_game.draw_progress()
 		print("Chararacter set: " + bcolors.BOLD + ww_game.char_set()+bcolors.ENDC)
-		print(warning,end='')
-		warning = ""
+		sys.stdout.write(query_msg)
+		query_msg  = ""
 		query = input("Guess: " + bcolors.BOLD).lower()
 		if query == "":
 			ww_game.shuffle_char_set()
 		elif query == "QUIT" or query == "q":
-			if input("Are you sure you want quit? (y/n) " + bcolors.ENDC).lower() != "y":
+			if input("Are you sure you want to quit? (y/n) " + bcolors.ENDC).lower() != "y":
 				continue
 			temp = os.system("clear")
 			ww_game.give_up()
@@ -54,12 +55,15 @@ def game_round(ww_game, round_duration, dev=False):
 			ww_game.give_up()
 			return(ww_game.score)			
 		elif len(query) > ww_game.game_num_chars():
-			warning = "Please only submit queries of length less than or equal to: " + str(ww_game.game_num_chars()) + "\n"
+			query_msg = "Please only submit queries of length less than or equal to: " + str(ww_game.game_num_chars()) + "\n"
 		elif ''.join(sorted(query)) not in ww_game.valid_char_subsets:
-			warning = "Please only enter queries that contain characers from the available character set\n"
+			query_msg = "Please only enter queries that contain characers from the available character set \n"
 		else:
-			ww_game.valid_guess(query)
+			if ww_game.valid_guess(query) > 1:
+				query_msg = word_defs[query]
 
+
+	print("TIME EXPIRED")
 	return(ww_game.score)
 	
 def global_game(is_classic, dev=False):
@@ -113,6 +117,8 @@ if not os.path.isfile("words_filter.txt"):
 	process_kilgarriff_words(all_names,freq_filter)
 	all_words = read_words_file("words_filter.txt")
 	find_6words(all_words)
+
+word_defs = get_word_definitions(dev=True)
 
 game_mode = input("Play classic? (y/n) ").lower()
 while game_mode != "y" and game_mode != "n" and game_mode != "":

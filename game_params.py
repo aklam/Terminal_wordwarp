@@ -24,7 +24,6 @@ class Game_params:
 		self.valid_words        = valid_words
 		self.sorted_len_words   = sorted(valid_words.keys(),key=len)
 		self.valid_char_subsets = valid_char_subsets
-		self.guesses_tried      = {}
 
 		self.total_num_words    = 0
 		self.num_words_guessed  = 0
@@ -36,23 +35,15 @@ class Game_params:
 			self.max_score += len(word) * 10
 
 	def valid_guess(self, guess):
-		if guess not in self.guesses_tried:
-			self.guesses_tried[guess] = 1
-		else:
-			self.guesses_tried[guess] += 1
-
 		if guess in self.valid_words:
 			if self.valid_words[guess] == 0:
 				self.num_words_guessed += 1
 				self.score += len(guess) * 10
 			self.valid_words[guess] += 1
-			return True
-		return False
+			return self.valid_words[guess] #will return 1 if its the first time returning
+			
+		return -1
 
-	def guess_history(self):
-		for guess in self.guesses_tried:
-			print(guess + ": " + str(self.guesses_tried[guess]))
-		return
 
 	def game_num_chars(self):
 		return self.num_chars
