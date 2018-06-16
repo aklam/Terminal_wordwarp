@@ -3,6 +3,7 @@ import sys
 import copy
 import time
 import random
+import pickle
 import string
 import itertools
 from word_defs import *
@@ -111,14 +112,23 @@ def global_game(is_classic, dev=False):
 
 
 use_names = False
-freq_filter = 100
-if not os.path.isfile("words_filter.txt"):
+freq_filter = 1
+
+if not os.path.isfile("word_definition_dict.pickle"):
+	word_defs = get_word_definitions(dev=True)
+	with open("word_definition_dict.pickle","wb") as handle:
+		pickle.dump(word_defs, handle, protocol=pickle.HIGHEST_PROTOCOL)
+else:
+	with open("word_definition_dict.pickle", "rb") as handle:
+		word_defs = pickle.load(handle)
+
+if not os.path.isfile("words_filter.txt") or not os.path.isfile("words6.txt"):
 	all_names = process_names() if use_names else {}
-	process_kilgarriff_words(all_names,freq_filter)
+	process_kilgarriff_words(all_names, freq_filter, word_defs)
 	all_words = read_words_file("words_filter.txt")
 	find_6words(all_words)
 
-word_defs = get_word_definitions(dev=True)
+
 
 game_mode = input("Play classic? (y/n) ").lower()
 while game_mode != "y" and game_mode != "n" and game_mode != "":

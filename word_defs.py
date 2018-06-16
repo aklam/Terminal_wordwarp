@@ -20,7 +20,8 @@ def get_word_definitions(dev=False):
 			word_lower = entry.b.string.lower()
 			if word_lower not in word_definitions:
 				word_definitions[word_lower] = []
-			word_definitions[word_lower].append(entry.contents[3][2:])
+			if entry.contents[3][2:] not in word_definitions[word_lower]:
+				word_definitions[word_lower].append(entry.contents[3][2:])
 
 	word_defs_condensed = {}
 	for word in word_definitions:
