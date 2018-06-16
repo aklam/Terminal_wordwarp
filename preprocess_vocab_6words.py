@@ -15,7 +15,7 @@ def find_6words(all_words, num_chars=6, min_words=12):
 	bar_width = int(win_columns) - 20
 	num_words = len(all_words)
 	load_bar_unit = int(num_words/bar_width)
-	print("This will take ~5 min")
+	print("Calculating word combinations")
 	print(bcolors.BOLD + "-"*math.ceil((bar_width-7)/2) + "Loading" + "-"*math.ceil((bar_width-7)/2) + bcolors.ENDC)
 	i = 0
 	for word in all_words:
