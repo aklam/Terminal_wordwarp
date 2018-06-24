@@ -7,6 +7,8 @@ import random
 import string
 import itertools
 
+startup_cache_path = "startup_cache"
+
 vowels = re.compile("a|e|i|o|u",re.IGNORECASE)
 #get all possible combinations of the character list
 def get_power_set(gen_chars, min_len):
@@ -29,7 +31,7 @@ def get_power_set(gen_chars, min_len):
 #generates the random characters to be used in the game
 #currently deprecated 
 def gen_rand_chars(num_chars):
-	words6_file = open("words6.txt","r")
+	words6_file = open(startup_cache_path+"/words6.txt","r")
 	list_6_words = words6_file.read().split("\n")
 	return list(random.choice(list_6_words))
 	

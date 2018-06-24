@@ -6,11 +6,15 @@ import random
 import pickle
 import string
 import itertools
+
+sys.path.append('CODES/')
+
 from word_defs import *
 from game_params import *
 from loading_bar import *
 from find_valid_words import *
 from preprocess_vocab_6words import *
+
 
 
 def game_startup(all_words, num_play_chars, min_num_words, is_classic, min_word_len, dev=False):
@@ -104,7 +108,7 @@ def global_game(is_classic, dev=False):
 	print("          Game Size: " + str(num_play_chars))
 	print("Minimum Word Length: " + str(min_word_len) + bcolors.ENDC)
 
-	all_words = read_words_file("words_filter.txt")
+	all_words = read_words_file("startup_cache/words_filter.txt")
 	word_warp = game_startup(all_words, num_play_chars, min_num_words, is_classic, min_word_len)
 	round_score = game_round(word_warp, round_duration, dev)
 	while round_score > 0:
@@ -115,18 +119,26 @@ def global_game(is_classic, dev=False):
 use_names = False
 freq_filter = 1
 
-if not os.path.isfile("word_definition_dict.pickle"):
-	word_defs = get_word_definitions(dev=True)
-	with open("word_definition_dict.pickle","wb") as handle:
+startup_cache_path = "startup_cache"
+
+if not os.path.isdir(startup_cache_path):
+	os.makedirs(startup_cache_path)
+
+if not os.path.isfile(startup_cache_path+"/word_definition_dict.pickle"):
+	word_defs = get_word_definitions()
+	with open(startup_cache_path+"/word_definition_dict.pickle","wb") as handle:
 		pickle.dump(word_defs, handle, protocol=pickle.HIGHEST_PROTOCOL)
 else:
-	with open("word_definition_dict.pickle", "rb") as handle:
+	with open(startup_cache_path+"/word_definition_dict.pickle", "rb") as handle:
 		word_defs = pickle.load(handle)
 
-if not os.path.isfile("words_filter.txt") or not os.path.isfile("words6.txt"):
+
+if not os.path.isfile(startup_cache_path+"/words_filter.txt"):
 	all_names = process_names() if use_names else {}
 	process_kilgarriff_words(all_names, freq_filter, word_defs)
-	all_words = read_words_file("words_filter.txt")
+
+if not os.path.isfile(startup_cache_path+"/words6.txt"):
+	all_words = read_words_file(startup_cache_path+"/words_filter.txt")
 	find_6words(all_words)
 
 

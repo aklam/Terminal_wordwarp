@@ -9,9 +9,12 @@ from find_valid_words import *
 from game_params import *
 from loading_bar import *
 
+startup_cache_path = "startup_cache"
+words_and_defs_path = "words_and_defs"
+
 #read all of the words in the word file
 def find_6words(all_words, num_chars=6, min_words=12):
-	words6_file = open("words"+str(num_chars)+".txt","w")
+	words6_file = open(startup_cache_path+"/words"+str(num_chars)+".txt","w")
 	win_rows, win_columns = os.popen('stty size', 'r').read().split()
 	bar_width = int(win_columns) - 20
 	num_words = len(all_words)
@@ -41,9 +44,9 @@ def find_6words(all_words, num_chars=6, min_words=12):
 
 #http://www.kilgarriff.co.uk/bnc-readme.html#lemmatised
 def process_kilgarriff_words(names_dict, freq_filter, word_defs):
-	freq_file  = open("all.num","r") 
+	freq_file  = open(words_and_defs_path+"/word_by_freq","r") 
 
-	proc_words_file = open("words_filter.txt","w")
+	proc_words_file = open(startup_cache_path+"/words_filter.txt","w")
 	for line in freq_file:
 		word_att = line.split()
 		if word_att[1].isalpha() and word_att[1].islower() and int(word_att[0]) >= freq_filter and word_att[1] not in names_dict and word_att[1] in word_defs:
@@ -51,7 +54,7 @@ def process_kilgarriff_words(names_dict, freq_filter, word_defs):
 
 def process_names():
 	all_names = {}
-	names_file = open("yob2017.txt","r")
+	names_file = open(words_and_defs_path+"/yob2017.txt","r")
 	names_csv  = csv.reader(names_file,delimiter=",")
 	for line in names_csv:
 		all_names[line[0].lower()] = 1

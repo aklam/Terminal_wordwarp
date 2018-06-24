@@ -3,7 +3,7 @@ import sys
 from bs4 import BeautifulSoup
 
 def get_word_definitions(dev=False):
-	path_to_defs = os.getcwd() + '/OPTED/v003/'
+	path_to_defs = os.getcwd() + '/words_and_defs/'
 	all_def_files = os.listdir(path_to_defs)
 	win_rows, win_columns = os.popen('stty size', 'r').read().split()
 	bar_width = int(win_columns) - 20
@@ -11,7 +11,7 @@ def get_word_definitions(dev=False):
 	word_definitions = {}
 
 	for def_file in all_def_files:
-		if not def_file.endswith('.html'):
+		if not def_file.endswith('.html') or def_file == "index.html":
 			continue
 		if dev:
 			print(def_file)
