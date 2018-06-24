@@ -1,2 +1,2 @@
 #!/bin/sh
-python wordwarp.py
+python CODES/wordwarp.py

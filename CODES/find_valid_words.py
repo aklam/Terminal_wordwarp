@@ -28,14 +28,6 @@ def get_power_set(gen_chars, min_len):
 				
 	return char_permutations
 
-#generates the random characters to be used in the game
-#currently deprecated 
-def gen_rand_chars(num_chars):
-	words6_file = open(startup_cache_path+"/words6.txt","r")
-	list_6_words = words6_file.read().split("\n")
-	return list(random.choice(list_6_words))
-	
-
 #read all of the words in the word file
 def read_words_file(words_filename):
 	words_file = open(words_filename, "r")
