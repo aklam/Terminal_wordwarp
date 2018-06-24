@@ -5,8 +5,9 @@ import csv
 import time
 import math
 import string
-from startup_utils import *
+from find_valid_words import *
 from game_params import *
+from loading_bar import *
 
 #read all of the words in the word file
 def find_6words(all_words, num_chars=6, min_words=12):

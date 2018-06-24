@@ -1,15 +1,18 @@
 import os
 import sys
-import glob
 from bs4 import BeautifulSoup
 
 def get_word_definitions(dev=False):
 	path_to_defs = os.getcwd() + '/OPTED/v003/'
-	all_def_files = os.listdir(path_to_defs)[1:]
+	all_def_files = os.listdir(path_to_defs)
+	win_rows, win_columns = os.popen('stty size', 'r').read().split()
+	bar_width = int(win_columns) - 20
 
 	word_definitions = {}
 
 	for def_file in all_def_files:
+		if not def_file.endswith('.html'):
+			continue
 		if dev:
 			print(def_file)
 		defs = open(path_to_defs + def_file,encoding='iso-8859-15')
@@ -40,5 +43,3 @@ def get_word_definitions(dev=False):
 	return word_defs_condensed
 
 
-
-	#return word_defs

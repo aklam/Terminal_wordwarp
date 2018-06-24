@@ -8,7 +8,8 @@ import string
 import itertools
 from word_defs import *
 from game_params import *
-from startup_utils import *
+from loading_bar import *
+from find_valid_words import *
 from preprocess_vocab_6words import *
 
 
